@@ -27,7 +27,7 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
         setStatus('sending...');
 
         const formData = new FormData(e.currentTarget);
-        const res = await fetch('/api/send-email', {
+        const res = await fetch('/api/send-email-particulier', {
         method: 'POST',
         body: formData,
         });
@@ -152,6 +152,13 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
           </div>
         )}
       </div>
+
+      {/* Hidden field to include selected services in form data */}
+      <input
+        type="hidden"
+        name="services"
+        value={selectedOptions.join(', ')}
+      />
 
       <div>
         <h1 className="font-black mb-1">Message</h1>

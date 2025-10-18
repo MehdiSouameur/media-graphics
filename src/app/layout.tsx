@@ -22,8 +22,8 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "My App",
-  description: "Next.js + Tailwind + Google Fonts",
+  title: "Media Graphics",
+  description: "",
 };
 
 export default function RootLayout({
