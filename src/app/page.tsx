@@ -164,7 +164,7 @@ export default function Home() {
             >
               {/* Background layers */}
               <div className="absolute top-0 left-0 w-1/2 h-full bg-[#1d3557] hidden lg:block" />
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80%] sm:w-[70%] h-full bg-[#1d3557] lg:hidden" />
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[90%] sm:w-[70%] h-full bg-[#1d3557] lg:hidden" />
 
               <div id="contact">
                 <Container className="flex flex-col relative text-base sm:text-lg md:text-xl py-4 items-center lg:items-start lg:text-left">
