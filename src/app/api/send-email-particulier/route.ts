@@ -1,8 +1,34 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { LRUCache } from 'lru-cache'; // ✅ Correct import
+
+// --- 🧩 Simple in-memory rate limiter ---
+const limiter = new LRUCache<string, number>({
+  max: 500, // track up to 500 IPs
+  ttl: 60 * 1000, // 1 minute
+});
+
+const MAX_REQUESTS = 3;
 
 export async function POST(request: Request) {
+  
   try {
+    // --- 🛑 RATE LIMIT CHECK ---
+    const ip =
+      request.headers.get('x-forwarded-for')?.split(',')[0] ||
+      'unknown';
+
+    const count = (limiter.get(ip) || 0) + 1;
+    limiter.set(ip, count);
+
+    if (count > MAX_REQUESTS) {
+      console.warn(`🚫 Rate limit exceeded for IP: ${ip}`);
+      return NextResponse.json(
+        { success: false, error: 'Trop de requêtes. Réessayez plus tard.' },
+        { status: 429 }
+      );
+    }
+    
     const formData = await request.formData();
 
     const prenom = formData.get('name') as string;
