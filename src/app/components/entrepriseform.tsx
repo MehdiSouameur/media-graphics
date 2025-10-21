@@ -77,7 +77,7 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
     <form onSubmit={handleSubmit} className={twMerge('flex flex-col gap-4', className)}>
       {/* --- Company --- */}
       <div>
-        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Nom de l'entreprise</h1>
+        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Nom de l&apos;entreprise</h1>
         <input
           name="company"
           type="text"

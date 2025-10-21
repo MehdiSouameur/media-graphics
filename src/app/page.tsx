@@ -6,7 +6,7 @@ import ParticulierForm from "./components/particulierform";
 import EntrepriseForm from "./components/entrepriseform";
 import Image from "next/image";
 import ToggleButtons from "./components/togglebuttons";
-import { motion, Variants } from "framer-motion";
+import { motion, Variants, Transition } from "framer-motion";
 
 import { useState } from 'react';
 
@@ -36,7 +36,7 @@ export default function Home() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as any, // 👈 cast resolves strict type mismatch
+        ease: 'easeOut' satisfies Transition['ease'], // 👈 cast resolves strict type mismatch
       },
     },
   };
@@ -48,7 +48,7 @@ export default function Home() {
       opacity: 1,
       y: 0,
       scale: 1,
-      transition: { duration: 0.6, ease: 'easeOut' as any },
+      transition: { duration: 0.6, ease: 'easeOut' satisfies Transition['ease'] },
     },
   };
 
@@ -57,7 +57,7 @@ export default function Home() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: 'easeOut' as any },
+      transition: { duration: 0.6, ease: 'easeOut' satisfies Transition['ease'] },
     },
   };
 
@@ -140,7 +140,7 @@ export default function Home() {
                   transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
                   className="text-base sm:text-lg md:text-xl mt-4 w-[90%] md:w-[80%] lg:w-full leading-snug"
                 >
-                  Bénéficiez d’un service d'impression efficace, précis et entièrement adapté à vos besoins professionnels ou personnels.
+                  Bénéficiez d&apos;un service d'impression efficace, précis et entièrement adapté à vos besoins professionnels ou personnels.
                 </motion.p>
 
                 {/* CTA */}
@@ -211,7 +211,7 @@ export default function Home() {
                         className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-white scroll-mt-22"
                         style={{ fontFamily: 'var(--font-poppins)' }}
                       >
-                        L'impression sur mesure
+                        L&apos;impression sur mesure
                       </motion.h1>
                     </div>
 
@@ -222,7 +222,7 @@ export default function Home() {
                       style={{ fontFamily: 'var(--font-roboto)' }}
                     >
                       Chez Media Graphic, nous mettons notre savoir-faire au service de vos projets
-                      d'impression pour vous offrir des réalisations de qualité, adaptées à vos besoins.
+                      d&apos;impression pour vous offrir des réalisations de qualité, adaptées à vos besoins.
                       Nous accompagnons chaque client avec rigueur et créativité, que ce soit pour :
                     </motion.p>
 
@@ -245,7 +245,7 @@ export default function Home() {
                         Carterie personnalisée
                       </motion.li>
                       <motion.li variants={itemVariants}>
-                        Tout autre projet d'impression dont vous avez besoin
+                        Tout autre projet d&apos;impression dont vous avez besoin
                       </motion.li>
                       <motion.li variants={itemVariants}>
                         Signalétique professionnelle
@@ -341,7 +341,7 @@ export default function Home() {
               </motion.div>
             </Container>
           </Section>
-          
+
           {/* FORM SECTION */}
           <Section className="py-20 sm:py-28 md:py-36 lg:py-40 overflow-hidden">
             <Container>
