@@ -140,7 +140,7 @@ export default function Home() {
                   transition={{ delay: 0.2, duration: 0.8, ease: 'easeOut' }}
                   className="text-base sm:text-lg md:text-xl mt-4 w-[90%] md:w-[80%] lg:w-full leading-snug"
                 >
-                  Bénéficiez d&apos;un service d'impression efficace, précis et entièrement adapté à vos besoins professionnels ou personnels.
+                  Bénéficiez d&apos;un service d&apos;impression efficace, précis et entièrement adapté à vos besoins professionnels ou personnels.
                 </motion.p>
 
                 {/* CTA */}
