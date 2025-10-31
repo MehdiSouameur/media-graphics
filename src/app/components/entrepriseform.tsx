@@ -15,12 +15,15 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const services = [
-    'Impression',
-    'Carterie',
-    'Signalitique',
-    'Affiches',
-    'Textiles',
-    'Autre',
+    'Impressions simples',
+    'Faire part',
+    'Carte de visite',
+    'Affiches A3',
+    'Affiches grands format',
+    'Tirage de plans',
+    'Brochure',
+    'Mémoire / Rapport de stage',
+    'Autre'
   ];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
