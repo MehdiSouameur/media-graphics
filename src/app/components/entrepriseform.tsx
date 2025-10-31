@@ -25,9 +25,21 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus(null);
+    const formData = new FormData(e.currentTarget);    
 
-    const formData = new FormData(e.currentTarget);
+
+    const start = Number(formData.get('timestamp'));
+    if (Date.now() - start < 2000) {
+      return new Response('Too fast – likely a bot.', { status: 400 });
+    }
+    // Bot filled boogey input form
+    if (formData.get('nickname')) {
+        return new Response('Bot detected', { status: 400 });
+    }
+
+    setStatus(null);
+    setErrors({});
+
     const company = formData.get('company') as string;
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
@@ -37,17 +49,21 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
     const newErrors: Record<string, string> = {};
 
     // --- Basic Validation ---
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!company.trim()) newErrors.company = "Veuillez entrer le nom de l'entreprise.";
-    if (!email.includes('@')) newErrors.email = "Veuillez entrer une adresse email valide.";
+    if (!emailPattern.test(email)) newErrors.email = "Veuillez entrer une adresse email valide.";
     if (phone.trim().length < 8) newErrors.phone = "Le numéro de téléphone est trop court.";
     if (message.trim().length < 10) newErrors.message = "Le message est trop court (10 caractères min).";
     if (selectedOptions.length === 0)
       newErrors.services = "Veuillez sélectionner au moins un service.";
 
     // File validation (optional but size/type safe)
-    if (file && file.size > 5 * 1024 * 1024) {
-      newErrors.file = 'Le fichier est trop volumineux (max 5MB).';
+    if (!file || file.size === 0 || !file.name) {
+      newErrors.file = 'Veuillez ajouter un fichier.';
+    } else if (file.size > 5 * 1024 * 1024) {
+      newErrors.file = 'Le fichier est trop volumineux (max 5 MB).';
     }
+
 
     setErrors(newErrors);
 
@@ -93,7 +109,7 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
         <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Email professionnel</h1>
         <input
           name="email"
-          type="email"
+          type="text"
           placeholder="Votre email professionnel"
           className={`w-[100%] sm:w-[50%] border p-2 rounded text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
             ${errors.email ? 'border-red-500' : 'border-[#bf983c]'}`}
@@ -127,16 +143,16 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
 
       {/* --- File Upload --- */}
       <div>
-        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Fichier (optionnel)</h1>
+        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Fichier</h1>
         <input
           name="file"
           type="file"
           className={`w-[100%] sm:w-[50%] border p-2 rounded bg-white
-                     file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
-                     file:text-sm sm:file:text-base md:file:text-lg file:font-semibold file:bg-[#bf983c] file:text-white
-                     file:shadow-sm hover:file:shadow-md
-                     hover:file:bg-[#a67f2d] cursor-pointer transition-all duration-200
-                     file:cursor-pointer ${errors.file ? 'border-red-500' : 'border-[#bf983c]'}`}
+                      file:mr-4 file:py-2 file:px-4 file:rounded file:border-0
+                      file:text-sm sm:file:text-base md:file:text-lg file:font-semibold file:bg-[#bf983c] file:text-white
+                      file:shadow-sm hover:file:shadow-md
+                      hover:file:bg-[#a67f2d] cursor-pointer transition-all duration-200
+                      file:cursor-pointer ${errors.file ? 'border-red-500' : 'border-[#bf983c]'}`}
         />
         {errors.file && <p className="text-red-500 text-xs mt-1">{errors.file}</p>}
         <p className="text-xs sm:text-sm md:text-base text-gray-500 mt-1">

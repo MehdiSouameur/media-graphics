@@ -73,7 +73,7 @@ export async function POST(request: Request) {
       to: recipients, // array or comma-separated string both work
       subject: `Demande de devis - ${prenom}`,
       text: `
-      Nouveau demande de devis particulier !
+      Nouvelle demande de devis particulier !
       
       Prenom: ${prenom}
       Email: ${email}

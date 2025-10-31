@@ -269,9 +269,9 @@ export default function Home() {
           </Section>
 
           {/* TRUST SECTION */}
+          {/*
           <Section className="py-20 sm:py-28 md:py-32 overflow-hidden">
             <Container>
-              {/* Title */}
               <motion.h1
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -283,7 +283,7 @@ export default function Home() {
                 Des impressions qui sont
               </motion.h1>
 
-              {/* Card Grid */}
+ 
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -291,7 +291,7 @@ export default function Home() {
                 viewport={{ once: true, amount: 0.25 }}
                 className="mt-10 sm:mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 sm:gap-12 md:gap-14 items-start"
               >
-                {/* Card 1 */}
+
                 <motion.div variants={cardVariants} className="flex flex-col items-center text-center px-4">
                   <div className="relative h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
                     <Image src="/paper.png" alt="Rigoureuses" fill className="object-contain" />
@@ -307,7 +307,7 @@ export default function Home() {
                   </p>
                 </motion.div>
 
-                {/* Card 2 */}
+ 
                 <motion.div variants={cardVariants} className="flex flex-col items-center text-center px-4">
                   <div className="relative h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
                     <Image src="/lightning.png" alt="Rapides" fill className="object-contain" />
@@ -323,7 +323,7 @@ export default function Home() {
                   </p>
                 </motion.div>
 
-                {/* Card 3 */}
+
                 <motion.div variants={cardVariants} className="flex flex-col items-center text-center px-4">
                   <div className="relative h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
                     <Image src="/speech.png" alt="Adaptées" fill className="object-contain" />
@@ -341,6 +341,7 @@ export default function Home() {
               </motion.div>
             </Container>
           </Section>
+          */}
 
           {/* FORM SECTION */}
           <Section className="py-20 sm:py-28 md:py-36 lg:py-40 overflow-hidden">

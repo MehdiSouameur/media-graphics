@@ -15,19 +15,33 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const services = [
-    'Impression',
-    'Carterie',
-    'Signalitique',
-    'Affiches',
-    'Textiles',
-    'Autre',
+    'Impressions simples',
+    'Faire part',
+    'Carte de visite',
+    'Affiches A3',
+    'Affiches grands format',
+    'Tirage de plans',
+    'Brochure',
+    'Mémoire / Rapport de stage',
+    'Autre'
   ];
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setStatus(null);
-
     const formData = new FormData(e.currentTarget);
+
+    const start = Number(formData.get('timestamp'));
+    if (Date.now() - start < 2000) {
+      return new Response('Too fast – likely a bot.', { status: 400 });
+    }
+    // Bot filled boogey input form
+    if (formData.get('nickname')) {
+        return new Response('Bot detected', { status: 400 });
+    }
+
+    setStatus(null);
+    setErrors({});
+
     const name = formData.get('name') as string;
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
@@ -36,24 +50,21 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
 
     const newErrors: Record<string, string> = {};
 
-    const start = Number(formData.get('timestamp'));
-    if (Date.now() - start < 2000) {
-      return new Response('Too fast – likely a bot.', { status: 400 });
-    }
-
-    // Bot filled boogey input form
-    if (formData.get('nickname')) {
-        return new Response('Bot detected', { status: 400 });
-    }
-
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     // --- Validation checks ---
     if (!name.trim()) newErrors.name = 'Veuillez entrer votre nom complet.';
-    if (!email.includes('@')) newErrors.email = 'Veuillez entrer une adresse email valide.';
+    if (!emailPattern.test(email)) newErrors.email = 'Veuillez entrer une adresse email valide.';
     if (phone.trim().length < 8) newErrors.phone = 'Le numéro de téléphone est trop court.';
     if (message.trim().length < 10) newErrors.message = 'Le message est trop court (10 caractères min).';
     if (selectedOptions.length === 0) newErrors.services = 'Veuillez sélectionner au moins un service.';
-    if (file && file.size > 5 * 1024 * 1024)
+
+    // File validation (optional but size/type safe)
+    if (!file || file.size === 0 || !file.name) {
+      newErrors.file = 'Veuillez ajouter un fichier.';
+    } else if (file.size > 5 * 1024 * 1024) {
       newErrors.file = 'Le fichier est trop volumineux (max 5 MB).';
+    }
+
 
     setErrors(newErrors);
 
@@ -113,7 +124,7 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
         <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Email</h1>
         <input
           name="email"
-          type="email"
+          type="text"
           placeholder="Votre email"
           className={`w-[100%] sm:w-[50%] border p-2 rounded text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
             ${errors.email ? 'border-red-500' : 'border-[#bf983c]'}`}
@@ -136,7 +147,7 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
 
       {/* --- File Upload --- */}
       <div>
-        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Fichier (optionnel)</h1>
+        <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Fichier</h1>
         <input
           name="file"
           type="file"
@@ -214,7 +225,7 @@ export default function ParticulierForm({ className = '' }: ParticulierFormProps
         <h1 className="font-black mb-1 text-sm sm:text-base md:text-lg">Message</h1>
         <textarea
           name="message"
-          placeholder="Dites-nous en davantage et soyez le plus précis possible (quantité, délai, couleur, format, etc.)"
+          placeholder="Dites-nous en d'avantage et soyez le plus précis possible (précisez la quantité, le format, le délai, si vous désirez de la couleur ou du noir et blanc, du recto verso ou recto simple...)"
           className={`w-full border p-2 rounded resize-none text-sm sm:text-base md:text-lg placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
             ${errors.message ? 'border-red-500' : 'border-[#bf983c]'}`}
           rows={5}

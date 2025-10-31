@@ -11,7 +11,7 @@ const limiter = new LRUCache<string, number>({
 const MAX_REQUESTS = 3;
 
 export async function POST(request: Request) {
-  
+
   try {
     // --- 🛑 RATE LIMIT CHECK ---
     const ip =
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
       to: recipients,
       subject: `Demande de devis - ${prenom}`,
       text: `
-        Nouveau demande de devis particulier !
+        Nouvelle demande de devis particulier !
 
         Prénom: ${prenom}
         Email: ${email}
