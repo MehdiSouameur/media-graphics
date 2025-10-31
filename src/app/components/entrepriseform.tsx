@@ -28,46 +28,67 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);    
+    const formData = new FormData(e.currentTarget);
 
-
+    // --- Bot protection ---
     const start = Number(formData.get('timestamp'));
     if (Date.now() - start < 2000) {
       return new Response('Too fast – likely a bot.', { status: 400 });
     }
-    // Bot filled boogey input form
     if (formData.get('nickname')) {
-        return new Response('Bot detected', { status: 400 });
+      return new Response('Bot detected', { status: 400 });
     }
 
+    // --- Reset states ---
     setStatus(null);
     setErrors({});
 
+    // --- Collect form data ---
     const company = formData.get('company') as string;
+    const addressLine1 = formData.get('addressLine1') as string;
+    const postalCode = formData.get('postalCode') as string;
+    const city = formData.get('city') as string;
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
     const message = formData.get('message') as string;
     const file = formData.get('file') as File | null;
 
     const newErrors: Record<string, string> = {};
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const postalPattern = /^\d{4,6}$/; // Only digits, 4–6 characters
 
-    // --- Basic Validation ---
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!company.trim()) newErrors.company = "Veuillez entrer le nom de l'entreprise.";
-    if (!emailPattern.test(email)) newErrors.email = "Veuillez entrer une adresse email valide.";
-    if (phone.trim().length < 8) newErrors.phone = "Le numéro de téléphone est trop court.";
-    if (message.trim().length < 10) newErrors.message = "Le message est trop court (10 caractères min).";
+    // --- Validation checks ---
+    if (!company.trim())
+      newErrors.company = "Veuillez entrer le nom de l'entreprise.";
+
+    // Address validation
+    if (!addressLine1.trim())
+      newErrors.addressLine1 = "Veuillez entrer l'adresse de l'entreprise.";
+    if (!postalCode.trim())
+      newErrors.postalCode = 'Veuillez entrer un code postal.';
+    else if (!postalPattern.test(postalCode))
+      newErrors.postalCode = 'Le code postal doit contenir uniquement des chiffres (4 à 6).';
+    if (!city.trim())
+      newErrors.city = 'Veuillez entrer une ville.';
+
+    // Contact + message
+    if (!emailPattern.test(email))
+      newErrors.email = 'Veuillez entrer une adresse email valide.';
+    if (phone.trim().length < 8)
+      newErrors.phone = 'Le numéro de téléphone est trop court.';
+    if (message.trim().length < 10)
+      newErrors.message = 'Le message est trop court (10 caractères min).';
     if (selectedOptions.length === 0)
-      newErrors.services = "Veuillez sélectionner au moins un service.";
+      newErrors.services = 'Veuillez sélectionner au moins un service.';
 
-    // File validation (optional but size/type safe)
+    // File validation
     if (!file || file.size === 0 || !file.name) {
       newErrors.file = 'Veuillez ajouter un fichier.';
     } else if (file.size > 5 * 1024 * 1024) {
       newErrors.file = 'Le fichier est trop volumineux (max 5 MB).';
     }
 
-
+    // --- Apply errors ---
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
@@ -75,6 +96,7 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
       return;
     }
 
+    // --- Submit ---
     setStatus('Envoi en cours...');
     const res = await fetch('/api/send-email-entreprise', {
       method: 'POST',
@@ -90,7 +112,8 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
         ? prev.filter(o => o !== option)
         : [...prev, option]
     );
-  }
+  }  
+
 
   return (
     <form onSubmit={handleSubmit} className={twMerge('flex flex-col gap-4', className)}>
@@ -106,6 +129,81 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
         />
         {errors.company && <p className="text-red-500 text-xs mt-1">{errors.company}</p>}
       </div>
+      
+
+      {/* --- Adresse --- */}
+      <div className="flex flex-col">
+        {/* Section title */}
+        <h1 className="font-black mb-2 text-sm sm:text-base md:text-lg">
+          Adresse de l&apos;entreprise
+        </h1>
+
+        {/* Ligne d’adresse */}
+        <label
+          htmlFor="addressLine1"
+          className="font-normal text-xs sm:text-sm md:text-base mb-1 text-black"
+        >
+          Adresse
+        </label>
+        <input
+          id="addressLine1"
+          name="addressLine1"
+          type="text"
+          placeholder="N° et rue (ex : 10 Rue de Rivoli)"
+          className={`w-[100%] sm:w-[50%] border p-2 rounded mb-2 
+            text-sm sm:text-base md:text-lg 
+            placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
+            ${errors.addressLine1 ? 'border-red-500' : 'border-[#bf983c]'}`}
+        />
+        {errors.addressLine1 && (
+          <p className="text-red-500 text-xs mt-1">{errors.addressLine1}</p>
+        )}
+
+        {/* Code postal */}
+        <label
+          htmlFor="postalCode"
+          className="font-normal text-xs sm:text-sm md:text-base mb-1 text-black"
+        >
+          Code postal
+        </label>
+        <input
+          id="postalCode"
+          name="postalCode"
+          type="text"
+          placeholder="Code postal"
+          className={`w-[100%] sm:w-[50%] border p-2 rounded mb-2 
+            text-sm sm:text-base md:text-lg 
+            placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
+            ${errors.postalCode ? 'border-red-500' : 'border-[#bf983c]'}`}
+        />
+        {errors.postalCode && (
+          <p className="text-red-500 text-xs mt-1">{errors.postalCode}</p>
+        )}
+
+        {/* Ville */}
+        <label
+          htmlFor="city"
+          className="font-normal text-xs sm:text-sm md:text-base mb-1 text-black"
+        >
+          Ville
+        </label>
+        <input
+          id="city"
+          name="city"
+          type="text"
+          placeholder="Ville"
+          className={`w-[100%] sm:w-[50%] border p-2 rounded 
+            text-sm sm:text-base md:text-lg 
+            placeholder:text-sm sm:placeholder:text-base md:placeholder:text-lg 
+            ${errors.city ? 'border-red-500' : 'border-[#bf983c]'}`}
+        />
+        {errors.city && (
+          <p className="text-red-500 text-xs mt-1">{errors.city}</p>
+        )}
+      </div>
+
+
+
 
       {/* --- Email --- */}
       <div>
@@ -215,6 +313,10 @@ export default function EntrepriseForm({ className = '' }: EntrepriseFormProps) 
         )}
         {errors.services && <p className="text-red-500 text-xs mt-1">{errors.services}</p>}
       </div>
+
+
+      {/* Hidden field for selected services */}
+      <input type="hidden" name="services" value={selectedOptions.join(', ')} />
 
       {/* --- Message --- */}
       <div>

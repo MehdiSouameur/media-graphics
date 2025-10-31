@@ -72,17 +72,17 @@ export async function POST(request: Request) {
       from: `"Formulaire Particulier" <${process.env.SMTP_USER}>`,
       to: recipients, // array or comma-separated string both work
       subject: `Demande de devis - ${prenom}`,
-      text: `
-      Nouvelle demande de devis particulier !
-      
-      Prenom: ${prenom}
-      Email: ${email}
-      Téléphone: ${phone}
-      Services: ${services}
+      html: `
+        <h2>Nouvelle demande de devis particulier !</h2>
+        <p><strong>Prénom :</strong> ${prenom}</p>
+        <p><strong>Email :</strong> ${email}</p>
+        <p><strong>Téléphone :</strong> ${phone}</p>
+        <p><strong>Services :</strong> ${services}</p>
+        <hr />
+        <p><strong>Message :</strong></p>
+        <p>${message.replace(/\n/g, '<br>')}</p>
+      `,
 
-      Message:
-      ${message}
-                `,
       attachments: attachment ? [attachment] : [],
     });
 

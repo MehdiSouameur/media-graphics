@@ -227,6 +227,7 @@ export default function Home() {
                     </motion.p>
 
                     {/* List */}
+                    {/*
                     <motion.ul
                       variants={containerVariants}
                       className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-white font-semibold space-y-2 list-disc list-outside pl-6 text-left"
@@ -251,6 +252,7 @@ export default function Home() {
                         Signalétique professionnelle
                       </motion.li>
                     </motion.ul>
+                    */}
 
 
                     {/* Button */}
