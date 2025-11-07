@@ -93,7 +93,7 @@ export default function Home() {
             <Container className="flex items-center justify-center sm:justify-between h-full">
               <div className="text-2xl font-bold cursor-pointer select-none hover:scale-[1.1] transition-all duration-200" 
               style={{ fontFamily: "var(--font-alfa)" }}>
-                Media Graphics
+                Media Graphic
               </div>
 
               <div className="flex items-center gap-8">
@@ -408,7 +408,7 @@ export default function Home() {
                       className="text-3xl font-bold cursor-pointer select-none hover:scale-[1.1] transition-all duration-200"
                       style={{ fontFamily: 'var(--font-alfa)' }}
                     >
-                      Media Graphics
+                      Media Graphic
                     </h1>
 
                     <div
