@@ -223,7 +223,7 @@ export default function Home() {
                     >
                       Chez Media Graphic, nous mettons notre savoir-faire au service de vos projets
                       d&apos;impression pour vous offrir des réalisations de qualité, adaptées à vos besoins.
-                      Nous accompagnons chaque client avec rigueur et créativité, que ce soit pour :
+                      Nous accompagnons chaque client avec rigueur et créativité.
                     </motion.p>
 
                     {/* List */}
